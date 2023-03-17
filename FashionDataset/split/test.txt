@@ -1,3 +1,4 @@
+picture_filename
 img/06000.jpg
 img/06001.jpg
 img/06002.jpg

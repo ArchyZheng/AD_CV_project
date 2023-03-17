@@ -1,3 +1,4 @@
+category1 category2 category3 category4 category5 category6
 5 0 2 0 2 2
 5 1 2 0 5 1
 5 0 2 3 4 2
