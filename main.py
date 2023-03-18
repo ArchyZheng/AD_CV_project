@@ -47,7 +47,7 @@ def main():
                 img_tensor = read_image(X[i]).float().to(device)
                 img_tensor = transform(img_tensor)
                 input.append(img_tensor)
-            input = torch.cat(input, 0).reshape(-1, 3, 224, 224)
+            input = torch.cat(input, 0).reshape(-1, 3, 224, 224).to(device)
             y_hat = model(input)
             loss = criterion(y_hat, y)
 
