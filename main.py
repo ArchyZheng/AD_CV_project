@@ -45,8 +45,9 @@ def main():
             optimizer.zero_grad()
             X.to(device)
             y.to(device)
-            y_hat = model(input)
+            y_hat = model(X)
             loss = criterion(y_hat, y)
+            print(loss)
 
             loss.backward()
             optimizer.step()
