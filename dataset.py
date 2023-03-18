@@ -15,9 +15,10 @@ class fashionDataset(Dataset):
 
     def __getitem__(self, index):
         img_path = self.picture_dir_name + '/' + str(self.picture_list.values[index][0])
-        tensor_picture = read_image(img_path)
-
-        return img_path, torch.tensor(self.label_list.values[index])
+        index = self.label_list.values[index] + [0, 7, 10, 13, 17, 23]
+        label = torch.zeros(26)
+        label[index] = 1
+        return img_path, label.type(torch.LongTensor)
 
     def __len__(self):
         return len(self.picture_list)
@@ -38,5 +39,3 @@ def get_train_or_val_dataloader(data_file: str, picture_list_dir: str, label_lis
     '''
     dataset = fashionDataset(data_file=data_file, picture_list_dir=picture_list_dir, label_list_dir=label_list_dir)
     return DataLoader(dataset=dataset, shuffle=shuffle, batch_size=batch_size)
-
-
