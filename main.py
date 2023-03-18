@@ -20,7 +20,7 @@ def main():
                                                    label_list_dir='split/val_attr.txt', shuffle=True, batch_size=batch_size)
     transform = nn.Sequential(
         T.Resize((224, 224))
-    )
+    ).to(device)
     # model = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2)
     model = baseResnet()
     model.to(device)
