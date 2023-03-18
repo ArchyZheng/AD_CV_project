@@ -41,21 +41,17 @@ def main():
         val_loss = 0
         val_acc = 0
         for X, y in train_dataloader:
-            optimizer.zero_grad()
-            y.to(device)
             model.train()
-            input = []
-            for i in range(len(X)):
-                img_tensor = read_image(X[i]).float().to(device)
-                img_tensor = transform(img_tensor)
-                input.append(img_tensor)
-            input = torch.cat(input, 0).reshape(-1, 3, 224, 224).to(device)
+            optimizer.zero_grad()
+            X.to(device)
+            y.to(device)
             y_hat = model(input)
-            loss = criterion(y_hat.to(device), y.to(device))
+            loss = criterion(y_hat, y)
 
             loss.backward()
             optimizer.step()
             train_loss += batch_size * loss.item()
+            # the loss function will automatically use mean operation after calculate.
         wandb.log({'train_loss': train_loss})
 
 

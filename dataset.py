@@ -4,7 +4,14 @@ import pandas as pd
 import torch
 import pprint
 from torchvision.io import read_image
-import yaml
+import torch.nn as nn
+from torchvision import transforms as T
+
+
+transform = nn.Sequential(
+    T.Resize((224, 224))
+)
+
 
 class fashionDataset(Dataset):
     def __init__(self, data_file: str, picture_list_dir: str, label_list_dir: str):
@@ -15,10 +22,15 @@ class fashionDataset(Dataset):
 
     def __getitem__(self, index):
         img_path = self.picture_dir_name + '/' + str(self.picture_list.values[index][0])
+        img_tensor = read_image(img_path).float()
+        # the operation of resize must in the dataset, cause the input of different picture has different size
+        img_tensor = transform(img_tensor)
+        # The classic label of multilabel task
+        # TODO: try other operation such like separate the output into six sub-field.
         index = self.label_list.values[index] + [0, 7, 10, 13, 17, 23]
         label = torch.zeros(26)
         label[index] = 1
-        return img_path, label.type(torch.LongTensor)
+        return img_tensor, label.type(torch.LongTensor)
 
     def __len__(self):
         return len(self.picture_list)
