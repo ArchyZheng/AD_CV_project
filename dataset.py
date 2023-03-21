@@ -30,7 +30,7 @@ class fashionDataset(Dataset):
         index = self.label_list.values[index] + [0, 7, 10, 13, 17, 23]
         label = torch.zeros(26)
         label[index] = 1
-        return img_tensor, label.type(torch.LongTensor)
+        return img_tensor, label
 
     def __len__(self):
         return len(self.picture_list)

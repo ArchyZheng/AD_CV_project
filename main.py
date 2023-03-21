@@ -6,6 +6,7 @@ from torch.optim import SGD, lr_scheduler
 import wandb
 import torchmetrics
 from utlis import organize_output
+from model import baseResnet
 
 
 def train(model, dataloader, optimiser, criterion):
@@ -19,6 +20,8 @@ def train(model, dataloader, optimiser, criterion):
         y.to(device)
 
         y_hat = model(x)
+        y.float()
+        y_hat.to(device)
         loss = criterion(y_hat, y)
         y_hat_transform = organize_output(y_hat=y_hat, k=6)
         epoch_precision += torchmetrics.functional.precision(preds=y_hat_transform, target=y,
@@ -41,6 +44,8 @@ def evaluate(model, dataloader, criterion):
         y.to(device)
 
         y_hat = model(x)
+        y.float()
+        y_hat.to(device)
         loss = criterion(y_hat, y)
         y_hat_transform = organize_output(y_hat=y_hat, k=6)
         epoch_precision += torchmetrics.functional.precision(preds=y_hat_transform, target=y,
@@ -51,8 +56,9 @@ def evaluate(model, dataloader, criterion):
 
 def main():
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    wandb.init()
+    # wandb.init()
 
+    # batch_size = 16  # TODO: changed by wandb
     batch_size = wandb.config.batch_size  # TODO: changed by wandb
     train_dataloader = get_train_or_val_dataloader(data_file='./FashionDataset', picture_list_dir='split/train.txt',
                                                    label_list_dir='split/train_attr.txt', shuffle=True,
@@ -62,19 +68,24 @@ def main():
                                                  label_list_dir='split/val_attr.txt', shuffle=True,
                                                  batch_size=batch_size)
 
-    model = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2)
+    # model = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2)
+    model = baseResnet()
     model.to(device)
     epochs = wandb.config.epochs  # TODO: changed by wandb
+    # epochs = 50  # TODO: changed by wandb
     # TODO: optimizer dict, figure out all of the parameter which occur in optimizer
     optimizer = SGD(params=model.parameters(), lr=wandb.config.lr, momentum=0.9, weight_decay=wandb.config.wd)
+    # optimizer = SGD(params=model.parameters(), lr=0.05, momentum=0.9, weight_decay=0)
 
     # TODO accuracy is metrics
-    criterion = nn.MultiLabelMarginLoss().to(device)
+    # criterion = nn.MultiLabelMarginLoss().to(device)
+    criterion = nn.CrossEntropyLoss().to(device)
 
     for epoch in range(epochs):
         train_loss, train_metric = train(model=model, criterion=criterion, optimiser=optimizer,
                                          dataloader=train_dataloader)
-        val_loss, val_metric = evaluate(model=model, criterion=criterion, dataloader=val_dataloader)
+        val_loss, val_metric = train(model=model, criterion=criterion,
+                                     dataloader=val_dataloader)
         print(f'train_loss: {train_loss}, train_metric: {train_metric}')
         wandb.log(
             {"train_loss": train_loss, "train_metric": train_metric, "val_loss": val_loss, "val_metric": val_metric})
