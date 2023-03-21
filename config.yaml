@@ -7,6 +7,9 @@ parameters:
   epochs:
     value: 50
   lr:
-    value: 0.1
+    value: 0.5
   wd:
     value: 0.0005
+  scheduler:
+    value: "cosine"
+#    value: "constant"
