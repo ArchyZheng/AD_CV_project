@@ -17,15 +17,18 @@ def train(model, dataloader, optimiser, criterion):
     for x, y in dataloader:
         optimiser.zero_grad()
         x.to(device)
-        y.to(device)
 
         y_hat = model(x)
         y.float()
-        y_hat.to(device)
-        loss = criterion(y_hat, y)
+        y.to(device)
+        print(0)
+        loss = criterion(y_hat.to(device), y.to(device))
+        print(1)
         y_hat_transform = organize_output(y_hat=y_hat, k=6)
+        print(2)
         epoch_precision += torchmetrics.functional.precision(preds=y_hat_transform, target=y,
                                                              task="multilabel", num_labels=26)
+        print(3)
         epoch_loss += loss.item()
 
         loss.backward()
