@@ -84,7 +84,7 @@ def main():
     for epoch in range(epochs):
         train_loss, train_metric = train(model=model, criterion=criterion, optimiser=optimizer,
                                          dataloader=train_dataloader)
-        val_loss, val_metric = train(model=model, criterion=criterion,
+        val_loss, val_metric = evaluate(model=model, criterion=criterion,
                                      dataloader=val_dataloader)
         print(f'train_loss: {train_loss}, train_metric: {train_metric}')
         wandb.log(
