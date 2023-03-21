@@ -59,7 +59,7 @@ def evaluate(model, dataloader, criterion):
 
 def main():
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    # wandb.init()
+    wandb.init()
 
     # batch_size = 16  # TODO: changed by wandb
     batch_size = wandb.config.batch_size  # TODO: changed by wandb
