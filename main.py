@@ -16,10 +16,12 @@ def train(model, dataloader, optimiser, criterion):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     for x, y in dataloader:
         optimiser.zero_grad()
-        y_hat = model(x.to(device))
-        loss = criterion(y_hat.to(device), y.float().to(device))
+        x = x.to(device)
+        y = y.to(device)
+        y_hat = model(x)
+        loss = criterion(y_hat, y)
         y_hat_transform = organize_output(y_hat=y_hat, k=6)
-        precision = torchmetrics.functional.precision(preds=y_hat_transform, target=y.to(device),
+        precision = torchmetrics.functional.precision(preds=y_hat_transform, target=y,
                                                              task="multilabel", num_labels=26)
         epoch_precision += precision
         epoch_loss += loss.item()
@@ -36,14 +38,17 @@ def evaluate(model, dataloader, criterion):
     epoch_loss = 0  # loss
     epoch_precision = 0  # metrics
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    for x, y in dataloader:
-        y_hat = model(x.to(device))
-        loss = criterion(y_hat, y.float().to(device))
-        y_hat_transform = organize_output(y_hat=y_hat, k=6)
-        precision = torchmetrics.functional.precision(preds=y_hat_transform, target=y.to(device),
-                                                             task="multilabel", num_labels=26)
-        epoch_precision += precision
-        epoch_loss += loss.item()
+    with torch.no_grad():
+        for x, y in dataloader:
+            x = x.to(device)
+            y = y.to(device)
+            y_hat = model(x)
+            loss = criterion(y_hat, y)
+            y_hat_transform = organize_output(y_hat=y_hat, k=6)
+            precision = torchmetrics.functional.precision(preds=y_hat_transform, target=y,
+                                                                 task="multilabel", num_labels=26)
+            epoch_precision += precision
+            epoch_loss += loss.item()
     return epoch_loss / len(dataloader), epoch_precision / len(dataloader)
 
 
