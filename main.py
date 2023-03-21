@@ -16,13 +16,12 @@ def train(model, dataloader, optimiser, criterion):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     for x, y in dataloader:
         optimiser.zero_grad()
-        x.to(device)
+        x = x.to(device)
 
         y_hat = model(x)
-        y.float()
-        y.to(device)
+        y = y.float().to(device)
         print(0)
-        loss = criterion(y_hat.to(device), y.to(device))
+        loss = criterion(y_hat, y)
         print(1)
         y_hat_transform = organize_output(y_hat=y_hat, k=6)
         print(2)
@@ -43,12 +42,10 @@ def evaluate(model, dataloader, criterion):
     epoch_precision = 0  # metrics
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     for x, y in dataloader:
-        x.to(device)
-        y.to(device)
+        x = x.to(device)
+        y = y.float().to(device)
 
         y_hat = model(x)
-        y.float()
-        y_hat.to(device)
         loss = criterion(y_hat, y)
         y_hat_transform = organize_output(y_hat=y_hat, k=6)
         epoch_precision += torchmetrics.functional.precision(preds=y_hat_transform, target=y,
