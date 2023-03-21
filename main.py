@@ -40,7 +40,7 @@ def evaluate(model, dataloader, criterion):
         y_hat = model(x.to(device))
         loss = criterion(y_hat, y.float().to(device))
         y_hat_transform = organize_output(y_hat=y_hat, k=6)
-        precision = torchmetrics.functional.precision(preds=y_hat_transform, target=y,
+        precision = torchmetrics.functional.precision(preds=y_hat_transform, target=y.to(device),
                                                              task="multilabel", num_labels=26)
         epoch_precision += precision
         epoch_loss += loss.item()
