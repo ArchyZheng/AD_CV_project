@@ -1,8 +1,7 @@
 import torch
 from dataset import get_train_or_val_dataloader
-from torchvision.models import resnet50, ResNet50_Weights
 import torch.nn as nn
-from torch.optim import SGD, lr_scheduler
+from torch.optim import SGD
 import wandb
 import torchmetrics
 from utlis import organize_output
@@ -55,6 +54,8 @@ def evaluate(model, dataloader, criterion):
 def main():
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     wandb.init()
+    seed = 123
+    torch.manual_seed(seed=seed)
 
     # batch_size = 16  # TODO: changed by wandb
     batch_size = wandb.config.batch_size  # TODO: changed by wandb
@@ -86,6 +87,7 @@ def main():
                                         dataloader=val_dataloader)
         wandb.log(
             {"train_loss": train_loss, "train_metric": train_metric, "val_loss": val_loss, "val_metric": val_metric})
+        scheduler.step()
 
 
 if __name__ == "__main__":
