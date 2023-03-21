@@ -16,18 +16,16 @@ def train(model, dataloader, optimiser, criterion):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     for x, y in dataloader:
         optimiser.zero_grad()
-        x = x.to(device)
+        print(x.device)
+        x.to(device)
+        print(x.device)
 
         y_hat = model(x)
-        y = y.float().to(device)
-        print(0)
+        y.float().to(device)
         loss = criterion(y_hat, y)
-        print(1)
         y_hat_transform = organize_output(y_hat=y_hat, k=6)
-        print(2)
         epoch_precision += torchmetrics.functional.precision(preds=y_hat_transform, target=y,
                                                              task="multilabel", num_labels=26)
-        print(3)
         epoch_loss += loss.item()
 
         loss.backward()
@@ -42,8 +40,8 @@ def evaluate(model, dataloader, criterion):
     epoch_precision = 0  # metrics
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     for x, y in dataloader:
-        x = x.to(device)
-        y = y.float().to(device)
+        x.to(device)
+        y.float().to(device)
 
         y_hat = model(x)
         loss = criterion(y_hat, y)
@@ -85,8 +83,7 @@ def main():
         train_loss, train_metric = train(model=model, criterion=criterion, optimiser=optimizer,
                                          dataloader=train_dataloader)
         val_loss, val_metric = evaluate(model=model, criterion=criterion,
-                                     dataloader=val_dataloader)
-        print(f'train_loss: {train_loss}, train_metric: {train_metric}')
+                                        dataloader=val_dataloader)
         wandb.log(
             {"train_loss": train_loss, "train_metric": train_metric, "val_loss": val_loss, "val_metric": val_metric})
 
