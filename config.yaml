@@ -1,5 +1,5 @@
 program: main.py
-name: trial
+name: "use_cosine_scheduler"
 method: grid
 parameters:
   batch_size:
@@ -7,6 +7,6 @@ parameters:
   epochs:
     value: 50
   lr:
-    value: 0.05
+    value: 0.1
   wd:
     value: 0.0005

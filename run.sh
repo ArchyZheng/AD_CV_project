@@ -13,4 +13,4 @@ wandb login "d3be0188f8e6de441fe26438708884794c8db33f"
 eval "$(conda shell.bash hook)"
 conda activate picTolatex
 
-python main.py --cfg './config.yaml'
+python main.py --cfg './config.yaml' --prj_name 'AD_project_1_demo'
