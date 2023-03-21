@@ -3,7 +3,7 @@ name: trial
 method: grid
 parameters:
   batch_size:
-    value: 64
+    value: 8
   epochs:
     value: 20
   lr:

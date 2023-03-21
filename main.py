@@ -16,20 +16,17 @@ def train(model, dataloader, optimiser, criterion):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     for x, y in dataloader:
         optimiser.zero_grad()
-        print(x.device)
-        x.to(device)
-        print(x.device)
-
-        y_hat = model(x)
-        y.float().to(device)
-        loss = criterion(y_hat, y)
+        y_hat = model(x.to(device))
+        loss = criterion(y_hat, y.float().to(device))
         y_hat_transform = organize_output(y_hat=y_hat, k=6)
-        epoch_precision += torchmetrics.functional.precision(preds=y_hat_transform, target=y,
+        precision = torchmetrics.functional.precision(preds=y_hat_transform, target=y,
                                                              task="multilabel", num_labels=26)
+        epoch_precision += precision
         epoch_loss += loss.item()
 
         loss.backward()
         optimiser.step()
+        print(f'loss:{loss.item()}, precision:{precision}')
 
     return epoch_loss / len(dataloader), epoch_precision / len(dataloader)
 
@@ -40,14 +37,12 @@ def evaluate(model, dataloader, criterion):
     epoch_precision = 0  # metrics
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     for x, y in dataloader:
-        x.to(device)
-        y.float().to(device)
-
-        y_hat = model(x)
-        loss = criterion(y_hat, y)
+        y_hat = model(x.to(device))
+        loss = criterion(y_hat, y.float().to(device))
         y_hat_transform = organize_output(y_hat=y_hat, k=6)
-        epoch_precision += torchmetrics.functional.precision(preds=y_hat_transform, target=y,
+        precision = torchmetrics.functional.precision(preds=y_hat_transform, target=y,
                                                              task="multilabel", num_labels=26)
+        epoch_precision += precision
         epoch_loss += loss.item()
     return epoch_loss / len(dataloader), epoch_precision / len(dataloader)
 
