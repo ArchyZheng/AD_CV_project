@@ -77,6 +77,8 @@ def main():
     # optimizer = SGD(params=model.parameters(), lr=0.05, momentum=0.9, weight_decay=0)
     if wandb.config.scheduler == "cosine":
         scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer=optimizer, T_max=wandb.config.epochs)
+    else:
+        scheduler = torch.optim.lr_scheduler.ConstantLR(optimizer=optimizer, factor=1.0, total_iters=wandb.config.epochs)
     # TODO accuracy is metrics
     # criterion = nn.MultiLabelMarginLoss().to(device)
     criterion = nn.CrossEntropyLoss().to(device)
