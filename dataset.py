@@ -50,4 +50,4 @@ def get_train_or_val_dataloader(data_file: str, picture_list_dir: str, label_lis
     True
     '''
     dataset = fashionDataset(data_file=data_file, picture_list_dir=picture_list_dir, label_list_dir=label_list_dir)
-    return DataLoader(dataset=dataset, shuffle=shuffle, batch_size=batch_size)
+    return DataLoader(dataset=dataset, shuffle=shuffle, batch_size=batch_size, num_workers=8)
