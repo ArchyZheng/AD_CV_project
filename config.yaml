@@ -3,10 +3,10 @@ name: trial
 method: grid
 parameters:
   batch_size:
-    value: 100
+    values: [8, 16, 32, 64]
   epochs:
     value: 50
   lr:
     value: 0.05
   wd:
-    value: 0.0005
+    value: 0
