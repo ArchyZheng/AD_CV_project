@@ -1,5 +1,7 @@
 program: main.py
-name: trial
+name: "find batchsize"
+project: "CV_project1_tune"
+description: "Base on Resnet50"
 method: grid
 parameters:
   batch_size:
