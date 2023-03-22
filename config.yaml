@@ -3,13 +3,13 @@ name: "use_cosine_scheduler"
 method: grid
 parameters:
   batch_size:
-    value: 100
+    value: [16, 32, 64]
   epochs:
     value: 50
   lr:
-    values: [1, 0.5, 0.25, 0.1, 0.05]
+    values: 0.5
   wd:
-    value: 0.0005
+    value: 0
   scheduler:
 #    value: "cosine"
     value: "constant"

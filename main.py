@@ -75,10 +75,10 @@ def main():
     # TODO: optimizer dict, figure out all of the parameter which occur in optimizer
     optimizer = SGD(params=model.parameters(), lr=wandb.config.lr, momentum=0.9, weight_decay=wandb.config.wd)
     # optimizer = SGD(params=model.parameters(), lr=0.05, momentum=0.9, weight_decay=0)
-    if wandb.config.scheduler == "cosine":
-        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer=optimizer, T_max=wandb.config.epochs)
-    else:
-        scheduler = torch.optim.lr_scheduler.ConstantLR(optimizer=optimizer, factor=1.0, total_iters=wandb.config.epochs)
+    # if wandb.config.scheduler == "cosine":
+    #     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer=optimizer, T_max=wandb.config.epochs)
+    # else:
+    #     scheduler = torch.optim.lr_scheduler.ConstantLR(optimizer=optimizer, factor=1.0, total_iters=wandb.config.epochs)
     # TODO accuracy is metrics
     # criterion = nn.MultiLabelMarginLoss().to(device)
     criterion = nn.CrossEntropyLoss().to(device)
@@ -90,7 +90,7 @@ def main():
                                         dataloader=val_dataloader)
         wandb.log(
             {"train_loss": train_loss, "train_metric": train_metric, "val_loss": val_loss, "val_metric": val_metric})
-        scheduler.step()
+        # scheduler.step()
 
 
 if __name__ == "__main__":
