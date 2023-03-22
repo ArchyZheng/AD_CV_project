@@ -22,13 +22,12 @@ def train(model, dataloader, optimiser, criterion):
         loss = criterion(y_hat, y)
         y_hat_transform = organize_output(y_hat=y_hat, k=6)
         precision = torchmetrics.functional.precision(preds=y_hat_transform, target=y,
-                                                             task="multilabel", num_labels=26)
+                                                      task="multilabel", num_labels=26)
         epoch_precision += precision
         epoch_loss += loss.item()
 
         loss.backward()
         optimiser.step()
-        print(f'loss:{loss.item()}, precision:{precision}')
 
     return epoch_loss / len(dataloader), epoch_precision / len(dataloader)
 
@@ -46,7 +45,7 @@ def evaluate(model, dataloader, criterion):
             loss = criterion(y_hat, y)
             y_hat_transform = organize_output(y_hat=y_hat, k=6)
             precision = torchmetrics.functional.precision(preds=y_hat_transform, target=y,
-                                                                 task="multilabel", num_labels=26)
+                                                          task="multilabel", num_labels=26)
             epoch_precision += precision
             epoch_loss += loss.item()
     return epoch_loss / len(dataloader), epoch_precision / len(dataloader)
@@ -68,7 +67,7 @@ def main():
 
     # model = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2)
     model = baseResnet()
-    model.to(device)
+    model = model.to(device)
     epochs = wandb.config.epochs  # TODO: changed by wandb
     # epochs = 50  # TODO: changed by wandb
     # TODO: optimizer dict, figure out all of the parameter which occur in optimizer
