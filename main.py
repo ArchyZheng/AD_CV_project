@@ -71,12 +71,17 @@ def main():
     if wandb.config.optimizer == "Adam":
         optimizer = torch.optim.Adam(params=model.parameters(), lr=wandb.config.lr, weight_decay=wandb.config.wd)
     else:
-        optimizer = SGD(params=model.parameters(), lr=wandb.config.lr, momentum=wandb.config.momentum, weight_decay=wandb.config.wd)
+        optimizer = SGD(params=model.parameters(), lr=wandb.config.lr, momentum=wandb.config.momentum,
+                        weight_decay=wandb.config.wd)
 
     # TODO accuracy is metrics
     # criterion = nn.MultiLabelMarginLoss().to(device)
     # criterion = nn.CrossEntropyLoss().to(device)
-    criterion = nn.BCEWithLogitsLoss().to(device)
+    # TODO: add weight for each class
+    weight = torch.ones(size=(1, 26))
+    if wandb.config.weight:
+        weight[0, [0 + 4, 7 + 1, 10 + 0, 13 + 2, 17 + 4, 23 + 1]] = 1.5
+    criterion = nn.BCEWithLogitsLoss(weight=weight).to(device)
 
     for epoch in range(epochs):
         train_loss, train_metric = train(model=model, criterion=criterion, optimiser=optimizer,
@@ -105,4 +110,3 @@ if __name__ == "__main__":
         sweep_configuration = yaml.safe_load(stream)
     sweep_id = wandb.sweep(sweep=sweep_configuration, project=args.prj_name)
     wandb.agent(sweep_id=sweep_id, function=main)
-

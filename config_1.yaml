@@ -1,5 +1,5 @@
 program: main.py
-name: "Using Adam"
+name: "Using different weight"
 project: "CV_project1_tune"
 description: "Base on Resnet50"
 method: grid
@@ -12,10 +12,12 @@ parameters:
   epochs:
     value: 30
   lr:
-    values: [0.001, 0.005, 0.01]
+    value: 0.05
   wd:
     value: 0
   optimizer:
-    value: "Adam"
+    value: "SGD"
   momentum:
-    value: 0
+    value: 0.9
+  weight:
+    values: [True, False]
