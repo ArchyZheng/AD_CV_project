@@ -82,7 +82,7 @@ def main():
                                         dataloader=val_dataloader)
         wandb.log(
             {"train_loss": train_loss, "train_metric": train_metric, "val_loss": val_loss, "val_metric": val_metric})
-    model.save(f"model-{wandb.run.id}.pt")
+    torch.save(model.state_dict(), f"model-{wandb.run.id}.pt")
     art = wandb.Artifact(f'mnist-nn-{wandb.run.id}', type="model")
     art.add_file(f"model-{wandb.run.id}.pt", "model.pt")
     wandb.log_artifact(art)

@@ -7,7 +7,7 @@ parameters:
   batch_size:
     value: 100
   epochs:
-    value: 50
+    value: 30
   lr:
     value: 0.05
   wd:
