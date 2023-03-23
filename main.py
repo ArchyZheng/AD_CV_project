@@ -57,29 +57,18 @@ def main():
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     wandb.init()
 
-    # batch_size = 16  # TODO: changed by wandb
     batch_size = wandb.config.batch_size  # TODO: changed by wandb
-    # train_dataloader = get_train_or_val_dataloader(data_file='./FashionDataset', picture_list_dir='split/train.txt',
-    #                                                label_list_dir='split/train_attr.txt', shuffle=True,
-    #                                                batch_size=batch_size)
-    #
-    # val_dataloader = get_train_or_val_dataloader(data_file='./FashionDataset', picture_list_dir='split/val.txt',
-    #                                              label_list_dir='split/val_attr.txt', shuffle=True,
-    #                                              batch_size=batch_size)
     train_dataset = fashionDataset(feature_dir='train_tensor.pt', label_dir='train_label.pt')
     val_dataset = fashionDataset(feature_dir='val_tensor.pt', label_dir='val_label.pt')
     train_dataloader = DataLoader(dataset=train_dataset, shuffle=True, num_workers=1,
                                   batch_size=wandb.config.batch_size)
     val_dataloader = DataLoader(dataset=val_dataset, shuffle=True, num_workers=1, batch_size=wandb.config.batch_size)
 
-    # model = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2)
     model = baseResnet()
     model = model.to(device)
     epochs = wandb.config.epochs  # TODO: changed by wandb
-    # epochs = 50  # TODO: changed by wandb
     # TODO: optimizer dict, figure out all of the parameter which occur in optimizer
     optimizer = SGD(params=model.parameters(), lr=wandb.config.lr, momentum=0.9, weight_decay=wandb.config.wd)
-    # optimizer = SGD(params=model.parameters(), lr=0.05, momentum=0.9, weight_decay=0)
 
     # TODO accuracy is metrics
     # criterion = nn.MultiLabelMarginLoss().to(device)
@@ -93,6 +82,10 @@ def main():
                                         dataloader=val_dataloader)
         wandb.log(
             {"train_loss": train_loss, "train_metric": train_metric, "val_loss": val_loss, "val_metric": val_metric})
+    model.save(f"model-{wandb.run.id}.pt")
+    art = wandb.Artifact(f'mnist-nn-{wandb.run.id}', type="model")
+    art.add_file(f"model-{wandb.run.id}.pt", "model.pt")
+    wandb.log_artifact(art)
     wandb.finish()
 
 
