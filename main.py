@@ -100,7 +100,6 @@ def main():
     torch.save(model.state_dict(), f"model-{wandb.run.id}.pt")
     art = wandb.Artifact(f'mnist-nn-{wandb.run.id}', type="model")
     art.add_file(f"model-{wandb.run.id}.pt", "model.pt")
-    wandb.log_artifact(art)
 
     test_dataset = fashionDataset_1('test_tensor.pt')
     test_dataloader = DataLoader(dataset=test_dataset, shuffle=False, batch_size=100)
@@ -115,6 +114,7 @@ def main():
     index = index.numpy()
     np.savetxt(f"prediction_{wandb.run.id}.txt", index, fmt="%.d")
     art.add_file(f"prediction_{wandb.run.id}.txt", "prediction.output")
+    wandb.log_artifact(art)
     wandb.finish()
 
 
