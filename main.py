@@ -68,7 +68,11 @@ def main():
     model = model.to(device)
     epochs = wandb.config.epochs  # TODO: changed by wandb
     # TODO: optimizer dict, figure out all of the parameter which occur in optimizer
-    optimizer = SGD(params=model.parameters(), lr=wandb.config.lr, momentum=0.9, weight_decay=wandb.config.wd)
+    if wandb.config.optimizer == "Adam":
+        # optimizer = torch.optim.Adam(params=model.parameters(), lr=wandb.config.lr, )
+        pass
+    else:
+        optimizer = SGD(params=model.parameters(), lr=wandb.config.lr, momentum=0.9, weight_decay=wandb.config.wd)
 
     # TODO accuracy is metrics
     # criterion = nn.MultiLabelMarginLoss().to(device)
