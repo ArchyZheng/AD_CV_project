@@ -11,7 +11,7 @@ parameters:
   lr:
     value: 0.05
   wd:
-    values: 0
+    value: 0
   optimizer:
     value: "Adam"
   momentum:
