@@ -14,11 +14,11 @@ parameters:
   lr:
     value: 0.05
   wd:
-    values: [0.002, 0.003, 0.0015, 0.0025]
+    values: [0.002, 0.0025]
   optimizer:
     value: "SGD"
   momentum:
     value: 0.9
   weight:
-    value: False
+    value: True
 
