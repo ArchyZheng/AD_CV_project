@@ -99,7 +99,6 @@ def main():
         scheduler.step()
     torch.save(model.state_dict(), f"model-{wandb.run.id}.pt")
     art = wandb.Artifact(f'mnist-nn-{wandb.run.id}', type="model")
-    data = wandb.Artifact(f'mnist-nn-{wandb.run.id}', type="raw_data")
     art.add_file(f"model-{wandb.run.id}.pt", "model.pt")
     wandb.log_artifact(art)
 
@@ -114,8 +113,8 @@ def main():
     index = torch.cat(index_1, dim=0)
     index = index.cpu()
     index = index.numpy()
-    np.savetxt(f"prediction.txt-{wandb.run.id}", index, fmt="%.d")
-    data.add_file(f"prediction.txt-{wandb.run.id}")
+    np.savetxt(f"prediction_{wandb.run.id}.txt", index, fmt="%.d")
+    art.add_file(f"prediction_{wandb.run.id}.txt", "prediction.output")
     wandb.finish()
 
 
