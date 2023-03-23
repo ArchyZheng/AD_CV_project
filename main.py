@@ -21,7 +21,7 @@ def train(model, dataloader, optimiser, criterion):
         x = x.to(device)
         y = y.to(device)
         y_hat = model(x)
-        loss = criterion(y_hat.softmax(dim=1), y.softmax(dim=1))
+        loss = criterion(y_hat, y)
         y_hat_transform = organize_output(y_hat=y_hat, k=6)
         precision = torchmetrics.functional.precision(preds=y_hat_transform, target=y,
                                                       task="multilabel", num_labels=26)
@@ -44,7 +44,7 @@ def evaluate(model, dataloader, criterion):
             x = x.to(device)
             y = y.to(device)
             y_hat = model(x)
-            loss = criterion(y_hat.softmax(dim=1), y.softmax(dim=1))
+            loss = criterion(y_hat, y)
             y_hat_transform = organize_output(y_hat=y_hat, k=6)
             precision = torchmetrics.functional.precision(preds=y_hat_transform, target=y,
                                                           task="multilabel", num_labels=26)
