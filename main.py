@@ -107,6 +107,7 @@ def main():
     test_dataloader = DataLoader(dataset=test_dataset, shuffle=False, batch_size=100)
     index_1 = []
     for X in test_dataloader:
+        X = X.to(device)
         y_hat = model(X)
         index = formal_output(y_hat)
         index_1.append(index)
