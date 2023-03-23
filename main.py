@@ -72,7 +72,7 @@ def main():
         # optimizer = torch.optim.Adam(params=model.parameters(), lr=wandb.config.lr, )
         pass
     else:
-        optimizer = SGD(params=model.parameters(), lr=wandb.config.lr, momentum=0.9, weight_decay=wandb.config.wd)
+        optimizer = SGD(params=model.parameters(), lr=wandb.config.lr, momentum=wandb.config.momentum, weight_decay=wandb.config.wd)
 
     # TODO accuracy is metrics
     # criterion = nn.MultiLabelMarginLoss().to(device)
