@@ -27,3 +27,14 @@ input = torch.randn(3, 5, requires_grad=True)
 target = torch.randn(3, 5).softmax(dim=1)
 output = loss(input, target)
 output.backward()
+#%%
+loss = nn.BCEWithLogitsLoss()
+
+input = torch.zeros(size=(1, 26))
+input[0, [i for i in range(1, 7)]] = 1
+input = input.softmax(dim=1)
+target = torch.zeros(size=(1, 26)).float()
+target[0, [i for i in range(6)]] = 1
+output = loss(input, target)
+#%%
+print(output)

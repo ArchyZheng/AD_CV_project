@@ -83,7 +83,8 @@ def main():
 
     # TODO accuracy is metrics
     # criterion = nn.MultiLabelMarginLoss().to(device)
-    criterion = nn.CrossEntropyLoss().to(device)
+    # criterion = nn.CrossEntropyLoss().to(device)
+    criterion = nn.BCEWithLogitsLoss().to(device)
 
     for epoch in range(epochs):
         train_loss, train_metric = train(model=model, criterion=criterion, optimiser=optimizer,
