@@ -22,16 +22,16 @@ def train(model, dataloader, optimiser, criterion):
         y = y.to(device)
         y_hat = model(x)
         loss = criterion(y_hat, y)
-        # y_hat_transform = organize_output(y_hat=y_hat, k=6)
-        # precision = torchmetrics.functional.precision(preds=y_hat_transform, target=y,
-        #                                               task="multilabel", num_labels=26)
-        # epoch_precision += precision
+        y_hat_transform = organize_output(y_hat=y_hat, k=6)
+        precision = torchmetrics.functional.precision(preds=y_hat_transform, target=y,
+                                                      task="multilabel", num_labels=26)
+        epoch_precision += precision
         epoch_loss += loss.item()
 
         loss.backward()
         optimiser.step()
 
-    return epoch_loss / len(dataloader) # , epoch_precision / len(dataloader)
+    return epoch_loss / len(dataloader), epoch_precision / len(dataloader)
 
 
 def evaluate(model, dataloader, criterion):
@@ -45,12 +45,12 @@ def evaluate(model, dataloader, criterion):
             y = y.to(device)
             y_hat = model(x)
             loss = criterion(y_hat, y)
-            # y_hat_transform = organize_output(y_hat=y_hat, k=6)
-            # precision = torchmetrics.functional.precision(preds=y_hat_transform, target=y,
-            #                                               task="multilabel", num_labels=26)
-            # epoch_precision += precision
+            y_hat_transform = organize_output(y_hat=y_hat, k=6)
+            precision = torchmetrics.functional.precision(preds=y_hat_transform, target=y,
+                                                          task="multilabel", num_labels=26)
+            epoch_precision += precision
             epoch_loss += loss.item()
-    return epoch_loss / len(dataloader) # , epoch_precision / len(dataloader)
+    return epoch_loss / len(dataloader), epoch_precision / len(dataloader)
 
 
 def main():
@@ -86,18 +86,13 @@ def main():
     criterion = nn.CrossEntropyLoss().to(device)
 
     for epoch in range(epochs):
-        # train_loss, train_metric = train(model=model, criterion=criterion, optimiser=optimizer,
-        #                                  dataloader=train_dataloader)
-        train_loss = train(model=model, criterion=criterion, optimiser=optimizer,
+        train_loss, train_metric = train(model=model, criterion=criterion, optimiser=optimizer,
                                          dataloader=train_dataloader)
-        # val_loss, val_metric = evaluate(model=model, criterion=criterion,
-        #                                 dataloader=val_dataloader)
-        val_loss = evaluate(model=model, criterion=criterion,
+        val_loss, val_metric = evaluate(model=model, criterion=criterion,
                                         dataloader=val_dataloader)
-        # wandb.log(
-        #     {"train_loss": train_loss, "train_metric": train_metric, "val_loss": val_loss, "val_metric": val_metric})
         wandb.log(
-            {"train_loss": train_loss, "val_loss": val_loss})
+            {"train_loss": train_loss, "train_metric": train_metric, "val_loss": val_loss, "val_metric": val_metric})
+    wandb.finish()
 
 
 if __name__ == "__main__":
