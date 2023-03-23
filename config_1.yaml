@@ -20,4 +20,9 @@ parameters:
   momentum:
     value: 0.9
   weight:
-    values: [True, False]
+    value: True
+  weight_value:
+    values: [2, 2.5]
+  baseModel:
+    value: "Resnet18"
+

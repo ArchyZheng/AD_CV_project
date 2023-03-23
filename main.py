@@ -64,7 +64,7 @@ def main():
                                   batch_size=wandb.config.batch_size)
     val_dataloader = DataLoader(dataset=val_dataset, shuffle=True, num_workers=1, batch_size=wandb.config.batch_size)
 
-    model = baseResnet()
+    model = baseResnet(baseModel=wandb.config.baseModel)
     model = model.to(device)
     epochs = wandb.config.epochs  # TODO: changed by wandb
     # TODO: optimizer dict, figure out all of the parameter which occur in optimizer
@@ -80,7 +80,7 @@ def main():
     # TODO: add weight for each class
     weight = torch.ones(size=(1, 26))
     if wandb.config.weight:
-        weight[0, [0 + 4, 7 + 1, 10 + 0, 13 + 2, 17 + 4, 23 + 1]] = 1.5
+        weight[0, [0 + 4, 7 + 1, 10 + 0, 13 + 2, 17 + 4, 23 + 1]] = wandb.config.weight_value
     criterion = nn.BCEWithLogitsLoss(weight=weight).to(device)
 
     for epoch in range(epochs):
