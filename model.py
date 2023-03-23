@@ -7,6 +7,7 @@ from copy import deepcopy
 #%%
 class baseResnet(nn.Module):
     def __init__(self, baseModel):
+        super().__init__()
         if baseModel == "Resnet50":
             self.resnet = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2)
         else:
