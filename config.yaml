@@ -1,5 +1,5 @@
 program: main.py
-name: "select momentum"
+name: "Using Adam"
 project: "CV_project1_tune"
 description: "Base on Resnet50"
 method: grid
@@ -11,8 +11,8 @@ parameters:
   lr:
     value: 0.05
   wd:
-    values: [0.001, 0.0005]
+    values: 0
   optimizer:
-    value: "SGD"
+    value: "Adam"
   momentum:
-    values: [0.5, 0.1]
+    value: 0

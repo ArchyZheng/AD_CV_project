@@ -69,8 +69,7 @@ def main():
     epochs = wandb.config.epochs  # TODO: changed by wandb
     # TODO: optimizer dict, figure out all of the parameter which occur in optimizer
     if wandb.config.optimizer == "Adam":
-        # optimizer = torch.optim.Adam(params=model.parameters(), lr=wandb.config.lr, )
-        pass
+        optimizer = torch.optim.Adam(params=model.parameters(), lr=wandb.config.lr, weight_decay=wandb.config.wd)
     else:
         optimizer = SGD(params=model.parameters(), lr=wandb.config.lr, momentum=wandb.config.momentum, weight_decay=wandb.config.wd)
 
