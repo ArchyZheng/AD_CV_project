@@ -1,5 +1,5 @@
 program: main.py
-name: "Using Adam"
+name: "Using SGD! with some different Wd"
 project: "CV_project1_tune"
 description: "Base on Resnet50"
 method: grid
@@ -12,11 +12,11 @@ parameters:
   epochs:
     value: 30
   lr:
-    values: [0.001, 0.005, 0.01]
+    value: 0.05
   wd:
-    value: 0
+    values: [0.002, 0.003, 0.0015, 0.0025]
   optimizer:
-    value: "Adam"
+    value: "SGD"
   momentum:
-    value: 0
+    value: 0.9
 
