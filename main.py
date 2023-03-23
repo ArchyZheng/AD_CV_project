@@ -73,6 +73,10 @@ def main():
     else:
         optimizer = SGD(params=model.parameters(), lr=wandb.config.lr, momentum=wandb.config.momentum,
                         weight_decay=wandb.config.wd)
+    if wandb.config.scheduler == "Cosine":
+        scheduler = lr_scheduler.CosineAnnealingLR(optimizer, wandb.config.epochs)
+    else:
+        scheduler = lr_scheduler.ConstantLR(optimizer=optimizer, factor=1.0, total_iters=wandb.config.epochs)
 
     # TODO accuracy is metrics
     # criterion = nn.MultiLabelMarginLoss().to(device)
@@ -90,6 +94,7 @@ def main():
                                         dataloader=val_dataloader)
         wandb.log(
             {"train_loss": train_loss, "train_metric": train_metric, "val_loss": val_loss, "val_metric": val_metric})
+        scheduler.step()
     torch.save(model.state_dict(), f"model-{wandb.run.id}.pt")
     art = wandb.Artifact(f'mnist-nn-{wandb.run.id}', type="model")
     art.add_file(f"model-{wandb.run.id}.pt", "model.pt")

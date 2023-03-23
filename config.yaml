@@ -25,4 +25,6 @@ parameters:
     values: [2, 2.5]
   baseModel:
     value: "Resnet50"
+  scheduler:
+    value: "constant"
 
