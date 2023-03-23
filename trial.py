@@ -38,3 +38,38 @@ target[0, [i for i in range(6)]] = 1
 output = loss(input, target)
 #%%
 print(output)
+#%%
+import numpy as np
+import wandb
+from dataset import get_train_or_val_dataloader
+wandb.init()
+#%%
+dataloader = get_train_or_val_dataloader(data_file='./FashionDataset', picture_list_dir='split/train.txt',
+                    label_list_dir='split/train_attr.txt', shuffle=True, batch_size=8)
+#%%
+examples = []
+for X, y in dataloader:
+ print(X.shape)
+ X.transpose_(1, 2)
+ X.transpose_(2, 3)
+ print(X.shape)
+ print(X[0].shape)
+ for i in range(3):
+  temp = X[i].numpy()
+  image = wandb.Image(temp, caption=f"this is just a trial{i}")
+  examples.append(image)
+ wandb.log({'examples': examples})
+ break
+#%%
+
+
+for i in range(3):
+ pixels = np.random.randint(low=0, high=256, size=(224, 224, 3))
+ image = wandb.Image(pixels, caption=f"random field {i}")
+ examples.append(image)
+wandb.log({"examples": examples})
+#%%
+x = torch.randn(2, 3)
+print(x)
+y = torch.transpose(x, 0, 1)
+print(y)
