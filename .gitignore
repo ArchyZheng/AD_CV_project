@@ -1,8 +1,9 @@
 /FashionDataset/
-/*.yaml
 /Report/
 /wandb/
 /train_label.pt
 /train_tensor.pt
 /val_label.pt
 /val_tensor.pt
+/test_tensor.pt
+/test/
