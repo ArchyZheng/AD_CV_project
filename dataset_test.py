@@ -1,6 +1,6 @@
 from torch.utils.data import Dataset
 import torch
-class fashionDataset(Dataset):
+class fashionDataset_1(Dataset):
     def __init__(self, feature_dir: str):
         super().__init__()
         self.feature = torch.load(feature_dir)

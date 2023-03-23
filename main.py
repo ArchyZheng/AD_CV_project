@@ -9,7 +9,9 @@ from utlis import organize_output
 from model import baseResnet
 from dataset_fortensor import fashionDataset
 from torch.utils.data import DataLoader
-
+from utlis import formal_output
+import numpy as np
+from dataset_test import fashionDataset_1
 
 def train(model, dataloader, optimiser, criterion):
     model.train()
@@ -99,6 +101,17 @@ def main():
     art = wandb.Artifact(f'mnist-nn-{wandb.run.id}', type="model")
     art.add_file(f"model-{wandb.run.id}.pt", "model.pt")
     wandb.log_artifact(art)
+
+    test_dataset = fashionDataset_1('test_tensor.pt')
+    test_dataloader = DataLoader(dataset=test_dataset, shuffle=False, batch_size=100)
+    index_1 = []
+    for X in test_dataloader:
+        y_hat = model(X)
+        index = formal_output(y_hat)
+        index_1.append(index)
+    index = torch.cat(index_1, dim=0)
+    index = index.numpy()
+    np.savetxt(f"prediction.txt-{wandb.run.id}", index, fmt="%.d")
     wandb.finish()
 
 
