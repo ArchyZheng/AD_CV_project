@@ -92,9 +92,9 @@ def main():
     criterion = nn.BCEWithLogitsLoss(weight=weight).to(device)
 
     transforms_train = nn.Sequential(
-        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         T.RandomResizedCrop(size=(112, 112)),
-        T.Resize(225, 225)
+        T.Resize(224, 224),
+        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
         # T.GaussianBlur(kernel_size=(5, 9), sigma=(0.1, 5))
     ).to(device)
     transforms_test = nn.Sequential(
