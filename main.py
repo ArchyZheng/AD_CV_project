@@ -1,6 +1,4 @@
 import torch
-from dataset import get_train_or_val_dataloader
-from torchvision.models import resnet50, ResNet50_Weights
 import torch.nn as nn
 from torch.optim import SGD, lr_scheduler
 import wandb
@@ -12,8 +10,10 @@ from torch.utils.data import DataLoader
 from utlis import formal_output
 import numpy as np
 from dataset_test import fashionDataset_1
+from torchvision import transforms as T
 
-def train(model, dataloader, optimiser, criterion):
+
+def train(model, dataloader, optimiser, criterion, transforms):
     model.train()
     epoch_loss = 0  # loss
     epoch_precision = 0  # metrics
@@ -21,6 +21,7 @@ def train(model, dataloader, optimiser, criterion):
     for x, y in dataloader:
         optimiser.zero_grad()
         x = x.to(device)
+        x = transforms(x)
         y = y.to(device)
         y_hat = model(x)
         loss = criterion(y_hat, y)
@@ -36,7 +37,7 @@ def train(model, dataloader, optimiser, criterion):
     return epoch_loss / len(dataloader), epoch_precision / len(dataloader)
 
 
-def evaluate(model, dataloader, criterion):
+def evaluate(model, dataloader, criterion, transforms):
     model.eval()
     epoch_loss = 0  # loss
     epoch_precision = 0  # metrics
@@ -44,6 +45,7 @@ def evaluate(model, dataloader, criterion):
     with torch.no_grad():
         for x, y in dataloader:
             x = x.to(device)
+            x = transforms(x)
             y = y.to(device)
             y_hat = model(x)
             loss = criterion(y_hat, y)
@@ -89,11 +91,18 @@ def main():
         weight[0, [0 + 4, 7 + 1, 10 + 0, 13 + 2, 17 + 4, 23 + 1]] = wandb.config.weight_value
     criterion = nn.BCEWithLogitsLoss(weight=weight).to(device)
 
+    transforms_train = nn.Sequential(
+        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        T.GaussianBlur(kernel_size=(5, 9), sigma=(0.1, 5))
+    ).to(device)
+    transforms_test = nn.Sequential(
+        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+    ).to(device)
     for epoch in range(epochs):
         train_loss, train_metric = train(model=model, criterion=criterion, optimiser=optimizer,
-                                         dataloader=train_dataloader)
+                                         dataloader=train_dataloader, transforms=transforms_train)
         val_loss, val_metric = evaluate(model=model, criterion=criterion,
-                                        dataloader=val_dataloader)
+                                        dataloader=val_dataloader, transforms=transforms_test)
         wandb.log(
             {"train_loss": train_loss, "train_metric": train_metric, "val_loss": val_loss, "val_metric": val_metric})
         scheduler.step()
@@ -106,6 +115,7 @@ def main():
     index_1 = []
     for X in test_dataloader:
         X = X.to(device)
+        X = transforms_test(X)
         y_hat = model(X)
         index = formal_output(y_hat)
         index_1.append(index)
