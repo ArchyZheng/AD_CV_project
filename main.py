@@ -22,7 +22,7 @@ def train(model, dataloader, optimiser, criterion, transforms, common):
         optimiser.zero_grad()
         x = x.to(device)
         color = T.RandomApply(nn.Sequential(
-                              T.ColorJitter(brightness=.5, hue=.3)), p=0.5)
+                              T.ColorJitter(brightness=.5, hue=.3)), p=0.3)
         x = color(x)
         x = common(x)
         x = transforms(x)
