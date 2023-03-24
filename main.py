@@ -95,7 +95,7 @@ def main():
     transforms_train = T.RandomApply(nn.Sequential(
         T.Pad(padding=2),
         T.RandomHorizontalFlip(),
-        T.ColorJitter(brightness=.5, hue=.3),
+        # T.ColorJitter(brightness=.5, hue=.3),
         T.RandomCrop(size=(224, 224)),
         T.Resize(size=(wandb.config.resolutionrate, wandb.config.resolutionrate)),
         T.Resize(size=(224, 224))
@@ -112,9 +112,9 @@ def main():
         wandb.log(
             {"train_loss": train_loss, "train_metric": train_metric, "val_loss": val_loss, "val_metric": val_metric})
         scheduler.step()
-    torch.save(model.state_dict(), f"model-{wandb.run.id}.pt")
+    torch.save(model.state_dict(), f"./model_libarary/model-{wandb.run.id}.pt")
     art = wandb.Artifact(f'mnist-nn-{wandb.run.id}', type="model")
-    art.add_file(f"model-{wandb.run.id}.pt", "model.pt")
+    art.add_file(f"./model_libarary/model-{wandb.run.id}.pt", "model.pt")
 
     test_dataset = fashionDataset_1('test_tensor.pt')
     test_dataloader = DataLoader(dataset=test_dataset, shuffle=False, batch_size=100)
@@ -128,8 +128,8 @@ def main():
     index = torch.cat(index_1, dim=0)
     index = index.cpu()
     index = index.numpy()
-    np.savetxt(f"prediction_{wandb.run.id}.txt", index, fmt="%.d")
-    art.add_file(f"prediction_{wandb.run.id}.txt", "prediction.output")
+    np.savetxt(f"result/prediction_{wandb.run.id}.txt", index, fmt="%.d")
+    art.add_file(f"result/prediction_{wandb.run.id}.txt", "prediction.output")
     wandb.log_artifact(art)
     wandb.finish()
 
