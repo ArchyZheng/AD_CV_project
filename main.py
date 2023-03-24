@@ -104,9 +104,12 @@ def main():
         T.Resize(size=(wandb.config.resolutionrate, wandb.config.resolutionrate)),
         T.Resize(size=(224, 224))
     ), p=wandb.config.trans_probability).to(device)
+
     transforms_test = nn.Sequential(
-        T.Normalize(mean=[195.333, 187.721, 185.050], std=[72.6773, 75.9105, 77.4861])
+        T.Normalize(mean=[195.333, 187.721, 185.050], std=[72.6773, 75.9105, 77.4861]),
+        T.Grayscale()
     ).to(device)
+
     for epoch in range(epochs):
         train_loss, train_metric = train(model=model, criterion=criterion, optimiser=optimizer,
                                          dataloader=train_dataloader, transforms=transforms_train,
