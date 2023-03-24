@@ -95,9 +95,9 @@ def main():
     transforms_train = T.RandomApply(nn.Sequential(
         T.RandomResizedCrop(size=(200, 200)),
         T.Resize(size=(224, 224))
-    ), p=0.7).to(device)
+    ), p=wandb.config.trans_probability).to(device)
     transforms_test = nn.Sequential(
-        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        T.Normalize(mean=[195.333, 187.721, 185.050], std=[72.6773, 75.9105, 77.4861])
     ).to(device)
     for epoch in range(epochs):
         train_loss, train_metric = train(model=model, criterion=criterion, optimiser=optimizer,
