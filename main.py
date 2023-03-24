@@ -93,7 +93,7 @@ def main():
     weight = torch.ones(size=(1, 26))
     if wandb.config.weight:
         weight[0, [0 + 4, 0 + 6, 7 + 1, 10 + 0, 13 + 1, 17 + 3, 23 + 1]] = wandb.config.weight_value
-        weight[0, [13 + 2, 23 + 2]] = wandb.config.weight_value + 3
+        weight[0, [13 + 2, 23 + 2]] = wandb.config.weight_value * 1.3
     criterion = nn.BCEWithLogitsLoss(weight=weight).to(device)
 
     transforms_train = T.RandomApply(nn.Sequential(
