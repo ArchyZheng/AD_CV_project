@@ -103,7 +103,8 @@ def main():
     ).to(device)
     for epoch in range(epochs):
         train_loss, train_metric = train(model=model, criterion=criterion, optimiser=optimizer,
-                                         dataloader=train_dataloader, transforms=transforms_train)
+                                         dataloader=train_dataloader, transforms=transforms_train,
+                                         common=transforms_test)
         val_loss, val_metric = evaluate(model=model, criterion=criterion,
                                         dataloader=val_dataloader, transforms=transforms_test)
         wandb.log(
