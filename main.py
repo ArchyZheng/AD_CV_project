@@ -93,7 +93,8 @@ def main():
     criterion = nn.BCEWithLogitsLoss(weight=weight).to(device)
 
     transforms_train = T.RandomApply(nn.Sequential(
-        T.Pad(padding=10),
+        T.Pad(padding=2),
+        T.RandomHorizontalFlip(),
         T.RandomCrop(size=(224, 224))
         # T.Resize(size=(150, 150)),
         # T.Resize(size=(224, 224))
