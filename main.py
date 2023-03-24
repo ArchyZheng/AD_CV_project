@@ -13,7 +13,7 @@ from dataset_test import fashionDataset_1
 from torchvision import transforms as T
 
 
-def train(model, dataloader, optimiser, criterion, transforms):
+def train(model, dataloader, optimiser, criterion, transforms, common):
     model.train()
     epoch_loss = 0  # loss
     epoch_precision = 0  # metrics
@@ -21,6 +21,7 @@ def train(model, dataloader, optimiser, criterion, transforms):
     for x, y in dataloader:
         optimiser.zero_grad()
         x = x.to(device)
+        x = common(x)
         x = transforms(x)
         y = y.to(device)
         y_hat = model(x)
@@ -91,12 +92,12 @@ def main():
         weight[0, [0 + 4, 7 + 1, 10 + 0, 13 + 2, 17 + 4, 23 + 1]] = wandb.config.weight_value
     criterion = nn.BCEWithLogitsLoss(weight=weight).to(device)
 
-    transforms_train = nn.Sequential(
+    transforms_train = T.RandomApply(nn.Sequential(
         T.RandomResizedCrop(size=(112, 112)),
-        T.Resize(size=(224, 224)),
-        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        T.Resize(size=(224, 224))
+        # T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
         # T.GaussianBlur(kernel_size=(5, 9), sigma=(0.1, 5))
-    ).to(device)
+    ), p=0.7).to(device)
     transforms_test = nn.Sequential(
         T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ).to(device)
