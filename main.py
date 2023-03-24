@@ -95,6 +95,7 @@ def main():
     transforms_train = T.RandomApply(nn.Sequential(
         T.Pad(padding=2),
         T.RandomHorizontalFlip(),
+        T.ColorJitter(brightness=.5, hue=.3),
         T.RandomCrop(size=(224, 224)),
         T.Resize(size=(wandb.config.resolutionrate, wandb.config.resolutionrate)),
         T.Resize(size=(224, 224))
