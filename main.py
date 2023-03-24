@@ -93,8 +93,10 @@ def main():
     criterion = nn.BCEWithLogitsLoss(weight=weight).to(device)
 
     transforms_train = T.RandomApply(nn.Sequential(
-        T.Resize(size=(150, 150)),
-        T.Resize(size=(224, 224))
+        T.Pad(padding=10),
+        T.RandomCrop(size=(224, 224))
+        # T.Resize(size=(150, 150)),
+        # T.Resize(size=(224, 224))
     ), p=wandb.config.trans_probability).to(device)
     transforms_test = nn.Sequential(
         T.Normalize(mean=[195.333, 187.721, 185.050], std=[72.6773, 75.9105, 77.4861])
