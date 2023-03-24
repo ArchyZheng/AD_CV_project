@@ -107,8 +107,8 @@ def main():
     ), p=wandb.config.trans_probability).to(device)
 
     transforms_test = nn.Sequential(
-        # T.Normalize(mean=[195.333, 187.721, 185.050], std=[72.6773, 75.9105, 77.4861]),
-        T.Grayscale()
+        T.Normalize(mean=[195.333, 187.721, 185.050], std=[72.6773, 75.9105, 77.4861]),
+        T.Grayscale(num_output_channels=3)
     ).to(device)
 
     for epoch in range(epochs):
