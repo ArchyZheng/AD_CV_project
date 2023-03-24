@@ -21,7 +21,8 @@ def train(model, dataloader, optimiser, criterion, transforms, common):
     for x, y in dataloader:
         optimiser.zero_grad()
         x = x.to(device)
-        color = T.RandomApply(nn.Sequential(T.AutoAugment(T.AutoAugmentPolicy.IMAGENET)), p=0.7)
+        color = T.RandomApply(nn.Sequential(
+                              T.ColorJitter(brightness=.5, hue=.3), p=0.5)
         x = color(x)
         x = common(x)
         x = transforms(x)
