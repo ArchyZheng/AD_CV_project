@@ -14,7 +14,7 @@ def test(model_base, model_name):
     model = baseResnet(baseModel=model_base)
     test_dataset = fashionDataset_1('test_tensor.pt')
     test_dataloader = DataLoader(dataset=test_dataset, shuffle=False, batch_size=100)
-    model.load_state_dict(torch.load('model.pt', map_location=('cpu')))
+    model.load_state_dict(torch.load(f'model-{model_name}.pt', map_location=('cpu')))
     # model.load_state_dict(torch.load(f'model-{model_name}.pt'))
     index_1 = []
     count = 0
