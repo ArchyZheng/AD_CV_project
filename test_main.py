@@ -27,4 +27,4 @@ def test(model_base, model_name):
     np.savetxt(f"prediction_{model_name}.txt", index, fmt="%.d")
 
 
-test(model_base="Resnet50", model_name='9b86h35x')
+test(model_base="Resnet50", model_name='9b8uh35x')
