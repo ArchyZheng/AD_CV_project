@@ -22,7 +22,7 @@ def train(model, dataloader, optimiser, criterion, transforms, common):
         optimiser.zero_grad()
         x = x.to(device)
         color = T.RandomApply(nn.Sequential(
-                              T.ColorJitter(brightness=.5, hue=.3)), p=0.3)
+                              T.ColorJitter(brightness=.5, hue=.3)), p=0.5)
         x = color(x)
         x = common(x)
         x = transforms(x)
@@ -92,7 +92,8 @@ def main():
     # TODO: add weight for each class
     weight = torch.ones(size=(1, 26))
     if wandb.config.weight:
-        weight[0, [0 + 4, 7 + 1, 10 + 0, 13 + 2, 17 + 4, 23 + 1]] = wandb.config.weight_value
+        weight[0, [0 + 4, 0 + 6, 7 + 1, 10 + 0, 13 + 1, 17 + 3, 23 + 1]] = wandb.config.weight_value
+        weight[0, [13 + 2, 23 + 2]] = wandb.config.weight_value + 3
     criterion = nn.BCEWithLogitsLoss(weight=weight).to(device)
 
     transforms_train = T.RandomApply(nn.Sequential(
