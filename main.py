@@ -93,7 +93,7 @@ def main():
     criterion = nn.BCEWithLogitsLoss(weight=weight).to(device)
 
     transforms_train = T.RandomApply(nn.Sequential(
-        T.RandomResizedCrop(size=(200, 200)),
+        T.Resize(size=(150, 150)),
         T.Resize(size=(224, 224))
     ), p=wandb.config.trans_probability).to(device)
     transforms_test = nn.Sequential(
