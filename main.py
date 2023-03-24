@@ -95,7 +95,7 @@ def main():
     transforms_train = T.RandomApply(nn.Sequential(
         T.Pad(padding=2),
         T.RandomHorizontalFlip(),
-        T.RandomCrop(size=(224, 224))
+        T.RandomCrop(size=(224, 224)),
         T.Resize(size=(220, 220)),
         T.Resize(size=(224, 224))
     ), p=wandb.config.trans_probability).to(device)
